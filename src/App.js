@@ -4,9 +4,9 @@ import './App.css';
 function App() {
 
   // This is the function to run after pressing Check Prime Button
-  const checkPrime = () => {
+  // export const checkPrime = ({}) => {
     
-  }
+  // }
 
   return (
   
