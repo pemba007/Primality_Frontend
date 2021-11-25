@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+
 import './App.css';
 
 function App() {
+
+  // This is the function to run after pressing Check Prime Button
+  const checkPrime = () => {
+    
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          This is the gang of DS
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  
+
+  <div class="center">
+      <h1> Group C Project</h1>
+      <h3>Testing Primality of multiple numbers</h3>
+
+      <form action="script name" method="get" class="center">
+          
+          Enter numbers: <input type="text" name="name"></input>
+      </form>
+
+      <button type="button">Click Me!</button>
+  </div>
+
   );
 }
 
