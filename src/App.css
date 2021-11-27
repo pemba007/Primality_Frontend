@@ -4,6 +4,19 @@
   display: grid;
   place-items: center;
 }
+
+* {
+  animation: 1s ease ease;
+}
+
 h1 {
   color: blue;
+}
+
+.timeTaken {
+  margin-top: 10px;
+}
+
+.timeTaken p {
+  font-weight: 700;
 }
