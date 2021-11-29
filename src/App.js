@@ -1,6 +1,6 @@
 import { useState } from "react";
+import Modal from "react-modal";
 import "./App.css";
-import { primeCheckFive } from "./primeCheck/primeCheckFive";
 import { primeCheckFour } from "./primeCheck/primeCheckFour";
 import { primeCheckOne } from "./primeCheck/primeCheckOne";
 import { primeCheckThree } from "./primeCheck/primeCheckThree";
@@ -17,7 +17,11 @@ const App = () => {
 
   const [error, setError] = useState(false);
 
-  // const [originalNumbers, setOriginalNumbers] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
+  const [answers, setAnswers] = useState([]);
+
+  const [originalNumbers, setOriginalNumbers] = useState([]);
 
   const setNotError = () => {
     setError(false);
@@ -35,7 +39,7 @@ const App = () => {
       console.log("The values are", numbersArr);
       console.log("The number of processors are ", processors);
 
-      const originalNumbers = [...numbersArr];
+      const tempOriginalNumbers = [...numbersArr];
 
       // Function to get the answers
 
@@ -57,20 +61,24 @@ const App = () => {
           // Using 4 processor
           answers = await primeCheckFour(numbersArr);
           break;
-        case 5:
-          // Using 5 processor
-          answers = await primeCheckFive(numbersArr);
-          break;
         default:
       }
       console.log("Answers Before", answers);
-      // answers = getAnswersArray(answers);
+      answers = getAnswersArray(answers);
       console.log("Answers", answers);
 
-      console.log("Original Numbers array", originalNumbers);
+      console.log("Original Numbers array", tempOriginalNumbers);
+      setAnswers(answers);
+      setOriginalNumbers(tempOriginalNumbers);
       var endTime = performance.now();
-      setTimeTaken(endTime - startTime);
-      console.log("Total Time Take ", endTime - startTime, "milliseconds");
+      setShowtTime(true);
+      setShowModal(true);
+      setTimeTaken((endTime - startTime).toFixed(4));
+      console.log(
+        "Total Time Take ",
+        (endTime - startTime).toFixed(4),
+        "milliseconds"
+      );
     }
   };
 
@@ -78,8 +86,13 @@ const App = () => {
     let res = [];
 
     for (let x = 0; x < answers.length; x++) {
-      console.log("values", answers[x][0].answer);
-      res.push(answers[x][0].answer === "True" ? true : false);
+      console.log("value to get", answers[x]);
+      res.push(
+        (answers[x][0] && answers[x][0].answer === "True") ||
+          (answers[x] && answers[x].answer === "True")
+          ? true
+          : false
+      );
     }
     return res;
   };
@@ -98,6 +111,25 @@ const App = () => {
     var seconds = ((millis % 60000) / 1000).toFixed(0);
     return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   };
+
+  // const columns = React.useMemo(
+  //   () => [
+  //     {
+  //       Header: "Name",
+  //       columns: [
+  //         {
+  //           Header: "First Name",
+  //           accessor: "firstName",
+  //         },
+  //         {
+  //           Header: "Last Name",
+  //           accessor: "lastName",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   []
+  // );
 
   return (
     <div className='main'>
@@ -145,7 +177,6 @@ const App = () => {
             <option value={2}>2</option>
             <option value={3}>3</option>
             <option value={4}>4</option>
-            <option value={5}>5</option>
           </select>
 
           <br />
@@ -153,11 +184,41 @@ const App = () => {
           <button type='submit' value='Submit' style={{ marginTop: "20px" }}>
             Check Primes
           </button>
-          {showTime && (
+          <Modal
+            isOpen={showModal}
+            // onAfterOpen={afterOpenModal}
+            onRequestClose={() => setShowModal(false)}
+            // style={customStyles}
+            contentLabel='Results'
+          >
+            {
+              // console.log("INside MODAL")
+              // console.log("original Numbers", originalNumbers)
+              // console.log("Inside Modal answers", answers)
+            }
+            <table>
+              {originalNumbers.map(function (name, index) {
+                // return <li key={index}>{name}</li>;
+                return (
+                  <>
+                    <tr key={index}>
+                      <th>{name}</th>
+                      <th>
+                        {answers[index] ? (
+                          <p style={{ color: "green" }}>Prime</p>
+                        ) : (
+                          <p style={{ color: "red" }}>Not Prime</p>
+                        )}{" "}
+                      </th>
+                    </tr>
+                  </>
+                );
+              })}
+            </table>
             <div className='timeTaken'>
-              Calculation Time :<p>{milisecondsToSeconds(timeTaken)}</p>
+              Calculation Time :<p>{timeTaken} ms</p>
             </div>
-          )}
+          </Modal>
         </form>
       </div>
     </div>

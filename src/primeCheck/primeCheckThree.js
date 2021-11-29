@@ -52,12 +52,19 @@ export const primeCheckThree = async (numbersArr) => {
       result = await Promise.all([promise1]);
     }
     console.log("results", result);
-    answers.push(result);
+    // answers.push(result);
+    result.forEach((resulttemp) => {
+      answers.push(resulttemp.value ? resulttemp.value : resulttemp);
+      console.log(
+        "results here",
+        resulttemp.value ? resulttemp.value : resulttemp
+      );
+    });
 
     cond = numbersArr.length > 0;
   }
   console.log("inside primce check one");
   console.log(answers);
 
-  return answers;
+  return answers.reverse();
 };

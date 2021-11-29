@@ -105,6 +105,13 @@ export const primeCheckFive = async (numbersArr) => {
   console.log("inside primce check");
   console.log("numbers arr", numbersArr);
   console.log(answers);
+  result.forEach((resulttemp) => {
+    answers.push(resulttemp.value ? resulttemp.value : resulttemp);
+    console.log(
+      "results here",
+      resulttemp.value ? resulttemp.value : resulttemp
+    );
+  });
 
-  return answers;
+  return answers.reverse();
 };

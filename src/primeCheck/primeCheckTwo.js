@@ -15,10 +15,11 @@ export const primeCheckTwo = async (numbersArr) => {
         `${serversLinks[0]}/checkPrime?numberToCheck=${checkingNumber}`
       ).then((response) => {
         response = response.json();
-        console.log("resolve for 1", response);
+
         console.log(
           `${serversLinks[0]}/checkPrime?numberToCheck=${checkingNumber}`
         );
+        console.log("resolve for 1", response);
         resolve(response);
       });
     });
@@ -43,16 +44,19 @@ export const primeCheckTwo = async (numbersArr) => {
     }
     // eslint-disable-next-line no-loop-func
     result.forEach((resulttemp) => {
-      answers.push(resulttemp.value);
-      console.log("results", resulttemp);
+      answers.push(resulttemp.value ? resulttemp.value : resulttemp);
+      console.log(
+        "results here",
+        resulttemp.value ? resulttemp.value : resulttemp
+      );
     });
 
     // answers.push(result);
 
     cond = numbersArr.length > 0;
   }
-  console.log("inside primce check one");
-  console.log(answers);
+  // console.log("inside primce check one");
+  // console.log(answers);
 
-  return answers;
+  return answers.reverse();
 };

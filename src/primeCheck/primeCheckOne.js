@@ -14,7 +14,7 @@ export const primeCheckOne = async (numbersArr) => {
         `${serversLinks[0]}/checkPrime?numberToCheck=${checkingNumber}`
       ).then((response) => {
         response = response.json();
-        resolve({ response, checkingNumber });
+        resolve(response);
       });
     });
     let result = await Promise.all([promise1]);
@@ -25,5 +25,5 @@ export const primeCheckOne = async (numbersArr) => {
   console.log("inside primce check one");
   console.log(answers);
 
-  return answers;
+  return answers.reverse();
 };
