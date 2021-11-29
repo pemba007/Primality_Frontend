@@ -17,53 +17,71 @@ const App = () => {
 
   const [error, setError] = useState(false);
 
+  // const [originalNumbers, setOriginalNumbers] = useState([]);
+
   const setNotError = () => {
     setError(false);
   };
 
-  const checkPrimes = (event) => {
+  const checkPrimes = async (event) => {
     event.preventDefault();
 
     if (!validateNumbers(numbers)) {
       setError(true);
     } else {
       var startTime = performance.now();
-      let numbersArr = getNumbers(numbers);
+      let numbersArr = Array.from(new Set(getNumbers(numbers)));
 
-      console.log("The values are", numbers);
+      console.log("The values are", numbersArr);
       console.log("The number of processors are ", processors);
+
+      const originalNumbers = [...numbersArr];
 
       // Function to get the answers
 
       let answers = [];
-      switch (processors) {
+      switch (parseInt(processors)) {
         case 1:
           // Using 1 processor
-          answers = primeCheckOne(numbersArr);
+          answers = await primeCheckOne(numbersArr);
           break;
         case 2:
           // Using 2 processor
-          answers = primeCheckTwo(numbersArr);
+          answers = await primeCheckTwo(numbersArr);
           break;
         case 3:
           // Using 3 processor
-          answers = primeCheckThree(numbersArr);
+          answers = await primeCheckThree(numbersArr);
           break;
         case 4:
           // Using 4 processor
-          answers = primeCheckFour(numbersArr);
+          answers = await primeCheckFour(numbersArr);
           break;
         case 5:
           // Using 5 processor
-          answers = primeCheckFive(numbersArr);
+          answers = await primeCheckFive(numbersArr);
           break;
         default:
       }
+      console.log("Answers Before", answers);
+      // answers = getAnswersArray(answers);
+      console.log("Answers", answers);
 
+      console.log("Original Numbers array", originalNumbers);
       var endTime = performance.now();
       setTimeTaken(endTime - startTime);
       console.log("Total Time Take ", endTime - startTime, "milliseconds");
     }
+  };
+
+  const getAnswersArray = (answers) => {
+    let res = [];
+
+    for (let x = 0; x < answers.length; x++) {
+      console.log("values", answers[x][0].answer);
+      res.push(answers[x][0].answer === "True" ? true : false);
+    }
+    return res;
   };
 
   const validateNumbers = (testingString) => {
@@ -72,7 +90,7 @@ const App = () => {
   };
 
   const getNumbers = (testingString) => {
-    return testingString.split("");
+    return testingString.split(",");
   };
 
   const milisecondsToSeconds = (millis) => {

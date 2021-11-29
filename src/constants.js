@@ -1,14 +1,9 @@
 // These are the links to the backend servers
 
 export const serversLinks = [
-  "localhost0",
-  "localhost1",
-  "localhost2",
-  "localhost3",
-  "localhost4",
-  "localhost5",
-  "localhost6",
-  "localhost7",
-  "localhost8",
-  "localhost9",
+  "http://127.0.0.1:5000",
+  "http://127.0.0.1:60000",
+  "http://127.0.0.1:60001",
+  "http://127.0.0.1:60002",
+  "http://127.0.0.1:60003",
 ];

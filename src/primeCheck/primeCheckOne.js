@@ -1,26 +1,29 @@
 import { serversLinks } from "../constants";
 
-export const primeCheckOne = (numbersArr) => {
-  let usageArr = [false];
-
+export const primeCheckOne = async (numbersArr) => {
   let cond = true;
   let answers = [];
 
-  while (cond) {
-    if (!usageArr[0] && usageArr.length > 0) {
-      let checkingNumber = usageArr.pop();
-      usageArr[0] = true;
-      fetch(serversLinks[0]).then((response) => {
-        usageArr[0] = false;
-        console.log("The Reponse", response);
-      });
-    }
+  // Working Code
+  cond = true;
 
-    // cond =
-    numbersArr === 0 &&
-      usageArr.every(function (e) {
-        return !e;
+  while (cond) {
+    let checkingNumber = numbersArr.pop();
+    const promise1 = new Promise((resolve) => {
+      fetch(
+        `${serversLinks[0]}/checkPrime?numberToCheck=${checkingNumber}`
+      ).then((response) => {
+        response = response.json();
+        resolve({ response, checkingNumber });
       });
+    });
+    let result = await Promise.all([promise1]);
+    answers.push(result);
+
+    cond = numbersArr.length > 0;
   }
+  console.log("inside primce check one");
+  console.log(answers);
+
   return answers;
 };

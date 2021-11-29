@@ -1,35 +1,58 @@
 import { serversLinks } from "../constants";
 
-export const primeCheckTwo = (numbersArr) => {
-  let usageArr = [false, false];
-
+export const primeCheckTwo = async (numbersArr) => {
+  console.log("Logging two process");
   let cond = true;
   let answers = [];
 
+  // Working Code
+  cond = true;
+  let result = {};
   while (cond) {
-    if (!usageArr[0] && usageArr.length > 0) {
-      let checkingNumber = usageArr.pop();
-      usageArr[0] = true;
-      fetch(serversLinks[0]).then((response) => {
-        usageArr[0] = false;
-        console.log("The Reponse", response);
+    let checkingNumber = numbersArr.pop();
+    let promise1 = new Promise((resolve) => {
+      fetch(
+        `${serversLinks[0]}/checkPrime?numberToCheck=${checkingNumber}`
+      ).then((response) => {
+        response = response.json();
+        console.log("resolve for 1", response);
+        console.log(
+          `${serversLinks[0]}/checkPrime?numberToCheck=${checkingNumber}`
+        );
+        resolve(response);
       });
-    }
+    });
 
-    if (!usageArr[1] && usageArr.length > 0) {
-      let checkingNumber = usageArr.pop();
-      usageArr[1] = true;
-      fetch(serversLinks[1]).then((response) => {
-        usageArr[1] = false;
-        console.log("The Reponse", response);
+    if (numbersArr.length > 1) {
+      let checkingNumber = numbersArr.pop();
+      let promise2 = new Promise((resolve) => {
+        fetch(
+          `${serversLinks[1]}/checkPrime?numberToCheck=${checkingNumber}`
+        ).then((response) => {
+          response = response.json();
+          console.log(
+            `${serversLinks[1]}/checkPrime?numberToCheck=${checkingNumber}`
+          );
+          console.log("resolve for 2", response);
+          resolve(response);
+        });
       });
+      result = await Promise.allSettled([promise1, promise2]);
+    } else {
+      result = await Promise.all([promise1]);
     }
+    // eslint-disable-next-line no-loop-func
+    result.forEach((resulttemp) => {
+      answers.push(resulttemp.value);
+      console.log("results", resulttemp);
+    });
 
-    cond =
-      numbersArr === 0 &&
-      usageArr.every(function (e) {
-        return !e;
-      });
+    // answers.push(result);
+
+    cond = numbersArr.length > 0;
   }
+  console.log("inside primce check one");
+  console.log(answers);
+
   return answers;
 };

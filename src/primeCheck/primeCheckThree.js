@@ -1,44 +1,63 @@
 import { serversLinks } from "../constants";
 
-export const primeCheckThree = (numbersArr) => {
-  let usageArr = [false, false, false];
-
+export const primeCheckThree = async (numbersArr) => {
+  console.log("Logging three process");
   let cond = true;
   let answers = [];
 
+  // Working Code
+  cond = true;
+  let result = {};
   while (cond) {
-    if (!usageArr[0] && usageArr.length > 0) {
-      let checkingNumber = usageArr.pop();
-      usageArr[0] = true;
-      fetch(serversLinks[0]).then((response) => {
-        usageArr[0] = false;
-        console.log("The Reponse", response);
+    let checkingNumber = numbersArr.pop();
+    let promise1 = new Promise((resolve) => {
+      fetch(
+        `${serversLinks[0]}/checkPrime?numberToCheck=${checkingNumber}`
+      ).then((response) => {
+        response = response.json();
+        console.log("resolve for 1", response);
+        resolve(response);
       });
-    }
+    });
 
-    if (!usageArr[1] && usageArr.length > 0) {
-      let checkingNumber = usageArr.pop();
-      usageArr[1] = true;
-      fetch(serversLinks[1]).then((response) => {
-        usageArr[1] = false;
-        console.log("The Reponse", response);
+    if (numbersArr.length > 1) {
+      let checkingNumber = numbersArr.pop();
+      let promise2 = new Promise((resolve) => {
+        fetch(
+          `${serversLinks[1]}/checkPrime?numberToCheck=${checkingNumber}`
+        ).then((response) => {
+          response = response.json();
+          console.log("resolve for 2", response);
+          resolve(response);
+        });
       });
-    }
 
-    if (!usageArr[2] && usageArr.length > 0) {
-      let checkingNumber = usageArr.pop();
-      usageArr[2] = true;
-      fetch(serversLinks[2]).then((response) => {
-        usageArr[2] = false;
-        console.log("The Reponse", response);
-      });
-    }
+      if (numbersArr.length > 1) {
+        let checkingNumber = numbersArr.pop();
+        let promise3 = new Promise((resolve) => {
+          fetch(
+            `${serversLinks[2]}/checkPrime?numberToCheck=${checkingNumber}`
+          ).then((response) => {
+            response = response.json();
+            console.log("resolve for 3", response);
+            resolve(response);
+          });
+        });
 
-    cond =
-      numbersArr === 0 &&
-      usageArr.every(function (e) {
-        return !e;
-      });
+        result = await Promise.allSettled([promise1, promise2, promise3]);
+      } else {
+        result = await Promise.allSettled([promise1, promise2]);
+      }
+    } else {
+      result = await Promise.all([promise1]);
+    }
+    console.log("results", result);
+    answers.push(result);
+
+    cond = numbersArr.length > 0;
   }
+  console.log("inside primce check one");
+  console.log(answers);
+
   return answers;
 };
